@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
@@ -56,21 +56,18 @@ class Address(TimeStampedModel):
     def __unicode__(self):
         return self.contact_name
 
-
-    def _output_html(self, template, seperator=None):
+    def _output_html(self, template, separator=None):
         output = []
         for row in [self.contact_name, self.address_one, self.address_two,
                     self.town, self.county, self.postcode, self.country]:
             if row:
-                output.append(template % {'field': force_unicode(row)})
-        if not seperator:
-            seperator = u'\n'
-        return mark_safe(seperator.join(output))
-
+                output.append(template % {'field': force_text(row)})
+        if not separator:
+            separator = u'\n'
+        return mark_safe(separator.join(output))
 
     def as_p(self):
         return self._output_html(u'%(field)s', u'<br />\n')
-
 
     def save(self, *args, **kwargs):
         if settings.NORMALISE_TO_UPPER:
@@ -81,7 +78,6 @@ class Address(TimeStampedModel):
             self.county = self.county.upper()
             self.postcode = self.postcode.upper()
         super(Address, self).save(*args, **kwargs)
-
 
     class Meta:
         ordering = ['created']
