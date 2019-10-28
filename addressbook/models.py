@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.db import models
 from django.db.models import CASCADE
 from django.utils.safestring import mark_safe
@@ -14,10 +12,11 @@ class Country(models.Model):
     iso_code = models.CharField(_('ISO code'), max_length=2, unique=True)
     name = models.CharField(_('name'), max_length=60)
 
-
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
 
     class Meta:
         ordering = ['name']
@@ -53,6 +52,9 @@ class Address(TimeStampedModel):
                 kwargs['postcode'] = kwargs['postcode'].upper()
         super(Address, self).__init__(*args, **kwargs)
 
+
+    def __str__(self):
+        return self.contact_name
 
     def __unicode__(self):
         return self.contact_name
